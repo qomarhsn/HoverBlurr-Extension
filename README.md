@@ -4,6 +4,8 @@
 
 Enhance your browsing experience with the HoverBlurr Chrome extension. It dynamically blurs images on web pages and unveils them when you hover over them with your mouse.
 
+> **Note**: The HoverBlurr Chrome extension is now archived. You can still use the extension, but there is also a **userscript** version available for users who prefer it. For more details, visit the [HoverBlurr Userscript Repo](https://github.com/qomarhsn/HoverBlurr-Userscript).
+
 ## Description
 
 HoverBlurr applies a default blur effect to images on web pages. When you hover your mouse over an image, the blur effect disappears, allowing you to see the image clearly. This helps mitigate distractions from various advertisements and other elements during browsing.
