@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HoverBlurr Settings</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <header class="header">
+      <div class="header-content">
+        <img src="../icons/icon-48.png" alt="HoverBlurr" class="logo">
+        <h1 id="headerTitle">HoverBlurr</h1>
+      </div>
+      <div class="header-actions">
+        <button id="viewToggleBtn" class="icon-btn" title="Toggle View">
+          <svg id="viewIcon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/>
+            <polyline points="10 2 10 10 13 7 16 10 16 2"/>
+          </svg>
+        </button>
+        <button id="themeToggle" class="icon-btn" title="Toggle Theme">
+          <svg id="themeIcon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+          </svg>
+        </button>
+        <label class="switch">
+          <input type="checkbox" id="enabled" checked>
+          <span class="slider"></span>
+        </label>
+      </div>
+    </header>
+
+    <!-- Current Site Section -->
+    <section class="section">
+      <div class="current-site">
+        <div class="site-info">
+          <span class="site-icon">🌐</span>
+          <span id="currentSite" class="site-name">Loading...</span>
+        </div>
+        <button id="whitelistBtn" class="btn btn-secondary">
+          <span id="whitelistText">Whitelist Site</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- Settings View -->
+    <div id="settingsView">
+      <section class="section">
+        <h2 class="section-title">Settings</h2>
+        
+        <div class="setting-group">
+          <label for="blurValue" class="setting-label">
+            <span>Blur Intensity</span>
+            <span id="blurValueDisplay" class="setting-value">20px</span>
+          </label>
+          <input type="range" id="blurValue" min="1" max="100" value="20" class="slider-input">
+        </div>
+
+        <div class="setting-group">
+          <label for="minImageSize" class="setting-label">
+            <span>Minimum Image Size</span>
+            <span id="minImageSizeDisplay" class="setting-value">40px</span>
+          </label>
+          <input type="range" id="minImageSize" min="0" max="200" value="40" class="slider-input">
+          <p class="setting-hint">Skip images smaller than this size (icons, emojis)</p>
+        </div>
+      </section>
+    </div>
+
+    <!-- Whitelist View -->
+    <div id="whitelistView" style="display: none;">
+      <section class="section">
+        <h2 class="section-title">Whitelisted Sites</h2>
+        <div id="whitelistContainer" class="whitelist-container">
+          <p class="empty-state">No whitelisted sites</p>
+        </div>
+      </section>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <p>HoverBlurr</p>
+      <div class="footer-links">
+        <a href="https://github.com/qomarhsn/HoverBlurr-Extension" target="_blank">GitHub</a>
+        <span>•</span>
+        <a href="https://github.com/qomarhsn/HoverBlurr-Extension/issues" target="_blank">Report Issue</a>
+      </div>
+    </footer>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

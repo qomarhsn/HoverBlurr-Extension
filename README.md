@@ -1,67 +1,46 @@
-[বাংলায় পড়ুন](README.bn.md)
+# HoverBlurr
 
-# HoverBlurr Extension
+A browser extension that blurs images on web pages. Hover over blurred images to reveal them.
 
-Enhance your browsing experience with the HoverBlurr Chrome extension. It dynamically blurs images on web pages and unveils them when you hover over them with your mouse.
+## What it does
 
-> **Note**: The HoverBlurr Chrome extension is now archived. You can still use the extension, but there is also a **userscript** version available for users who prefer it. For more details, visit the [HoverBlurr Userscript Repo](https://github.com/qomarhsn/HoverBlurr-Userscript).
-
-## Description
-
-HoverBlurr applies a default blur effect to images on web pages. When you hover your mouse over an image, the blur effect disappears, allowing you to see the image clearly. This helps mitigate distractions from various advertisements and other elements during browsing.
-
-## Features
-
-- **Dynamic Blurring**: Automatically blurs images on all web pages.
-- **Hover to Reveal**: Hovering over an image removes the blur effect.
-- **Customizable Blur**: Users can adjust the blur intensity through the extension's popup.
-- **Whitelist Functionality**: Users can whitelist specific websites to exclude them from blurring.
-- **Easy to Use**: Simple interface to manage blur settings and whitelist sites.
-
+- Automatically blurs images on websites
+- Reveal images by hovering over them
+- Customizable blur intensity and speed
+- Whitelist sites to exclude from blurring
 
 ## Installation
 
-### For Chrome
+### Chrome/Edge
 
-1. Download the CRX file from [here](https://github.com/kamrulhasanio/HoverBlurr-Extension/releases/latest).
-2. Open Google Chrome or any Chromium-based browser.
-3. Type `chrome://extensions` in the address bar and press Enter.
-4. Enable Developer mode from the top-right corner.
-5. Drag and drop the downloaded CRX file onto the Extensions page.
+1. Download the `.crx` file from the [Releases](https://github.com/qomarhsn/HoverBlurr-Extension/releases) page
+2. Open `chrome://extensions/`
+3. Enable "Developer mode"
+4. Drag and drop the downloaded `.crx` file into the extensions page
 
+### Firefox
+
+Currently trying to publish on Firefox Add-ons Store. Once published, the installation link will be added here.
+
+For now, you can install it temporarily:
+1. Download this repository (click "Code" > "Download ZIP") and extract it, or clone it using `git clone`
+2. Open `about:debugging#/runtime/this-firefox`
+3. Click "Load Temporary Add-on"
+4. Select `manifest.json` from the extracted/cloned folder
 
 ## Usage
 
-### Blurring Images:
+1. Click the HoverBlurr icon in your browser toolbar
+2. Toggle the extension on/off
+3. Adjust settings as needed
+4. Visit any website - images will be blurred automatically
 
-- Once installed, all images on any loaded web page will be initially blurred.
-- Hover your mouse over an image to unblur it. Moving your mouse away will blur it again.
+## Keyboard Shortcuts
 
-### Adjusting Blur Intensity:
+- `Alt+B` - Toggle blur on/off for current site
 
-- Click on the HoverBlurr extension icon to open the popup.
-- Use the slider to adjust the blur intensity.
-- Changes are applied immediately to all images on the current page.
+## License
 
-### Whitelisting Sites:
+MIT License - see [LICENSE](LICENSE) file for details
 
-- To whitelist a site, open the HoverBlurr popup and click the "Whitelist Site" button.
-- The current site will be added to the whitelist, and images on this site will no longer be blurred.
-- To remove a site from the whitelist, click the "Remove Whitelist" button.
-
-### Managing Whitelist:
-
-- The popup displays a list of all whitelisted sites.
-- You can remove a site from the whitelist by clicking the trash icon next to the site.
-
-## Contribution
-
-Contributions are essential for every open-source project. If you wish to contribute to this project, fork the repository, create a new branch, make your changes, and open a pull request.
-
-### License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-### Questions and Suggestions
-
-For questions or suggestions, please post on the project's [GitHub Discussions](https://github.com/kamrulhasanio/HoverBlurr-Extension/discussions) page.
+[Blur icons created by Icon mania - Flaticon](https://www.flaticon.com/free-icons/blur)

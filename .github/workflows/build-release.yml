@@ -1,0 +1,53 @@
+name: Build Chrome Extension Release
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Get version from release
+        id: version
+        run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+
+      - name: Create build directory
+        run: mkdir -p dist
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Build Chrome extension
+        run: |
+          # Convert Firefox manifest to Chrome format
+          node -e "
+            const fs = require('fs');
+            const manifest = JSON.parse(fs.readFileSync('manifest.json', 'utf8'));
+            manifest.background = {
+              service_worker: 'background/background.js'
+            };
+            fs.writeFileSync('manifest.json', JSON.stringify(manifest, null, 2));
+          "
+          
+          # Create Chrome CRX package
+          zip -r dist/HoverBlurr-Chrome.crx \
+            background/ \
+            content/ \
+            icons/ \
+            lib/ \
+            popup/ \
+            manifest.json
+
+      - name: Upload Chrome extension to release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: dist/HoverBlurr-Chrome.crx
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

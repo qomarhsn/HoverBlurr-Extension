@@ -1,0 +1,19 @@
+# Build artifacts
+dist/
+*.zip
+*.xpi
+
+# Development
+node_modules/
+.DS_Store
+.vscode/
+.idea/
+
+# Temporary files
+*.log
+*.tmp
+*~
+
+# OS files
+Thumbs.db
+desktop.ini

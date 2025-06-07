@@ -1,0 +1,65 @@
+/**
+ * HoverBlurr Content Styles
+ * CSS for blur effects and notifications
+ */
+
+:root {
+  --hoverblurr-blur-amount: 20px;
+}
+
+/* Blur effect */
+img.hoverblurr-blur,
+image.hoverblurr-blur {
+  filter: blur(var(--hoverblurr-blur-amount)) !important;
+  transition: filter 0.3s ease !important;
+  will-change: filter;
+}
+
+/* Remove blur on hover */
+img.hoverblurr-blur:hover,
+image.hoverblurr-blur:hover {
+  filter: blur(0px) !important;
+}
+
+/* Respect reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  img.hoverblurr-blur,
+  image.hoverblurr-blur {
+    transition: none !important;
+  }
+}
+
+/* Notification styles */
+.hoverblurr-notification {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: rgba(0, 0, 0, 0.9);
+  color: white;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  z-index: 999999;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  pointer-events: none;
+}
+
+.hoverblurr-notification-show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+  .hoverblurr-notification {
+    bottom: 10px;
+    right: 10px;
+    left: 10px;
+    text-align: center;
+  }
+}
