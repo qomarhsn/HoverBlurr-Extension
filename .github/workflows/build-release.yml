@@ -1,53 +1,78 @@
-name: Build Chrome Extension Release
+name: Build Chrome Extension from Release Source
 
 on:
   release:
     types: [published]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Release version (e.g., v0.8)"
+        required: false
+
+permissions:
+  contents: write
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    
+
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - name: Determine version
+        id: get_version
+        run: |
+          if [ -n "${{ github.event.inputs.version }}" ]; then
+            VERSION="${{ github.event.inputs.version }}"
+          else
+            VERSION="${GITHUB_REF#refs/tags/}"
+          fi
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          echo "Building for version: $VERSION"
 
-      - name: Get version from release
-        id: version
-        run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
-
-      - name: Create build directory
-        run: mkdir -p dist
+      - name: Download GitHub auto-generated source ZIP
+        run: |
+          echo "Downloading source archive for ${{ env.VERSION }}..."
+          curl -L -o source.zip \
+            "https://github.com/${{ github.repository }}/archive/refs/tags/${{ env.VERSION }}.zip"
+          unzip source.zip
+          mv $(ls -d */ | head -n 1) source
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: "20"
 
-      - name: Build Chrome extension
+      - name: Prepare Chrome manifest
         run: |
-          # Convert Firefox manifest to Chrome format
+          mkdir -p build
+          cp -r source/background source/content source/icons source/lib source/popup source/manifest.json build/
           node -e "
             const fs = require('fs');
-            const manifest = JSON.parse(fs.readFileSync('manifest.json', 'utf8'));
-            manifest.background = {
-              service_worker: 'background/background.js'
-            };
-            fs.writeFileSync('manifest.json', JSON.stringify(manifest, null, 2));
+            const path = 'build/manifest.json';
+            const manifest = JSON.parse(fs.readFileSync(path, 'utf8'));
+            manifest.background = { service_worker: 'background/background.js' };
+            fs.writeFileSync(path, JSON.stringify(manifest, null, 2));
           "
-          
-          # Create Chrome CRX package
-          zip -r dist/HoverBlurr-Chrome.crx \
-            background/ \
-            content/ \
-            icons/ \
-            lib/ \
-            popup/ \
-            manifest.json
 
-      - name: Upload Chrome extension to release
+      - name: Create Chrome extension ZIP (flat structure)
+        run: |
+          mkdir -p dist
+          cd build
+          zip -r ../dist/HoverBlurr-Chrome-${{ env.VERSION }}.zip ./*
+
+      - name: Verify ZIP structure
+        run: |
+          echo "Verifying ZIP structure..."
+          unzip -l dist/HoverBlurr-Chrome-${{ env.VERSION }}.zip | head -n 20
+          if ! unzip -l dist/HoverBlurr-Chrome-${{ env.VERSION }}.zip | grep -q "manifest.json"; then
+            echo "❌ manifest.json not found at ZIP root"
+            exit 1
+          fi
+          echo "✅ manifest.json found at ZIP root"
+
+      - name: Upload Chrome ZIP to release
         uses: softprops/action-gh-release@v1
         with:
-          files: dist/HoverBlurr-Chrome.crx
+          tag_name: ${{ env.VERSION }}
+          files: dist/HoverBlurr-Chrome-${{ env.VERSION }}.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
