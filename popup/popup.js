@@ -93,10 +93,18 @@ function applyTheme(theme) {
  * Update theme icon
  */
 function updateThemeIcon(currentTheme) {
-  const sunIcon = `<path d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 1 1-8 0 4 4 0 0 1 8 0z"/>`;
-  const moonIcon = `<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>`;
+  const sunPath = "M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 1 1-8 0 4 4 0 0 1 8 0z";
+  const moonPath = "M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z";
   
-  elements.themeIcon.innerHTML = currentTheme === 'dark' ? sunIcon : moonIcon;
+  // Clear existing content
+  while (elements.themeIcon.firstChild) {
+    elements.themeIcon.removeChild(elements.themeIcon.firstChild);
+  }
+  
+  // Create SVG path element
+  const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+  path.setAttribute('d', currentTheme === 'dark' ? sunPath : moonPath);
+  elements.themeIcon.appendChild(path);
 }
 
 /**
@@ -241,7 +249,17 @@ function toggleView() {
     elements.headerTitle.textContent = 'Whitelisted Sites';
     
     // Change icon to settings icon
-    elements.viewIcon.innerHTML = `<path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/>`;
+    while (elements.viewIcon.firstChild) {
+      elements.viewIcon.removeChild(elements.viewIcon.firstChild);
+    }
+    const settingsPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    settingsPath.setAttribute('d', 'M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z');
+    const settingsCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    settingsCircle.setAttribute('cx', '12');
+    settingsCircle.setAttribute('cy', '12');
+    settingsCircle.setAttribute('r', '3');
+    elements.viewIcon.appendChild(settingsPath);
+    elements.viewIcon.appendChild(settingsCircle);
     elements.viewToggleBtn.title = 'Back to Settings';
     
     // Load whitelist
@@ -256,7 +274,15 @@ function toggleView() {
     elements.headerTitle.textContent = 'HoverBlurr';
     
     // Change icon back to bookmark
-    elements.viewIcon.innerHTML = `<path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/><polyline points="10 2 10 10 13 7 16 10 16 2"/>`;
+    while (elements.viewIcon.firstChild) {
+      elements.viewIcon.removeChild(elements.viewIcon.firstChild);
+    }
+    const bookmarkPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    bookmarkPath.setAttribute('d', 'M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20');
+    const bookmarkPolyline = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
+    bookmarkPolyline.setAttribute('points', '10 2 10 10 13 7 16 10 16 2');
+    elements.viewIcon.appendChild(bookmarkPath);
+    elements.viewIcon.appendChild(bookmarkPolyline);
     elements.viewToggleBtn.title = 'Whitelisted Sites';
   }
 }
