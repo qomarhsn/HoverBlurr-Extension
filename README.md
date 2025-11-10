@@ -1,6 +1,6 @@
 # HoverBlurr
 
-A browser extension that blurs images on web pages. Hover over blurred images to reveal them.
+A browser extension that automatically blurs images on webpages and reveals them when you hover over them — helping you stay focused and distraction-free.
 
 ## What it does
 
@@ -13,10 +13,10 @@ A browser extension that blurs images on web pages. Hover over blurred images to
 
 ### Chrome/Edge
 
-1. Download the `.crx` file from the [Releases](https://github.com/qomarhsn/HoverBlurr-Extension/releases) page
+1. Download the `HoverBlurr-Chrome-*.zip` file from the [Releases](https://github.com/qomarhsn/HoverBlurr-Extension/releases) page
 2. Open `chrome://extensions/`
 3. Enable "Developer mode"
-4. Drag and drop the downloaded `.crx` file into the extensions page
+4. Drag and drop the downloaded `HoverBlurr-Chrome-*.zip` file into the extensions page
 
 ### Firefox
 
