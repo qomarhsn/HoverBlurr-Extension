@@ -11,7 +11,7 @@ A browser extension that automatically blurs images on webpages and reveals them
 
 ## Installation
 
-### Chrome/Edge
+### Chromium
 
 1. Download the `HoverBlurr-Chrome-*.zip` file from the [Releases](https://github.com/qomarhsn/HoverBlurr-Extension/releases) page
 2. Open `chrome://extensions/`
