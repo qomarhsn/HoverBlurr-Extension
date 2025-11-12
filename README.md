@@ -20,13 +20,7 @@ A browser extension that automatically blurs images on webpages and reveals them
 
 ### Firefox
 
-Currently trying to publish on Firefox Add-ons Store. Once published, the installation link will be added here.
-
-For now, you can install it temporarily:
-1. Download this repository (click "Code" > "Download ZIP") and extract it, or clone it using `git clone`
-2. Open `about:debugging#/runtime/this-firefox`
-3. Click "Load Temporary Add-on"
-4. Select `manifest.json` from the extracted/cloned folder
+Install from the [Firefox Add-ons Store](https://addons.mozilla.org/en-US/firefox/addon/hoverblurr-extension/)
 
 ## Usage
 
