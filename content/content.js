@@ -98,9 +98,11 @@
    * Update CSS variables based on settings
    */
   function updateCSSVariables() {
+    // Convert percentage to pixels (1% = 0.5px, 100% = 50px)
+    const blurPixels = Math.round((settings.blurValue / 100) * 50);
     document.documentElement.style.setProperty(
       "--hoverblurr-blur-amount",
-      `${settings.blurValue}px`
+      `${blurPixels}px`
     );
   }
 

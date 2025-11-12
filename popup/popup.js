@@ -46,7 +46,7 @@ async function loadSettings() {
     // Update UI
     elements.enabled.checked = settings.enabled;
     elements.blurValue.value = settings.blurValue;
-    elements.blurValueDisplay.textContent = `${settings.blurValue}px`;
+    elements.blurValueDisplay.textContent = `${settings.blurValue}%`;
     elements.minImageSize.value = settings.minImageSize;
     elements.minImageSizeDisplay.textContent = `${settings.minImageSize}px`;
 
@@ -303,7 +303,7 @@ async function init() {
 
   elements.blurValue.addEventListener('input', (e) => {
     const value = parseInt(e.target.value);
-    elements.blurValueDisplay.textContent = `${value}px`;
+    elements.blurValueDisplay.textContent = `${value}%`;
     saveSetting('blurValue', value);
   });
 
