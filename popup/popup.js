@@ -16,6 +16,9 @@ const elements = {
   whitelistBtn: document.getElementById('whitelistBtn'),
   whitelistText: document.getElementById('whitelistText'),
   whitelistContainer: document.getElementById('whitelistContainer'),
+  tempWhitelistBtn: document.getElementById('tempWhitelistBtn'),
+  tempWhitelistText: document.getElementById('tempWhitelistText'),
+  tempWhitelistContainer: document.getElementById('tempWhitelistContainer'),
   themeToggle: document.getElementById('themeToggle'),
   themeIcon: document.getElementById('themeIcon'),
   viewToggleBtn: document.getElementById('viewToggleBtn'),
@@ -136,10 +139,15 @@ async function getCurrentHostname() {
       currentHostname = url.hostname;
       elements.currentSite.textContent = currentHostname;
       
-      // Update whitelist button
+      // Update whitelist buttons
       const settings = await browserAPI.storage.sync.get('whitelist');
       const isWhitelisted = settings.whitelist && settings.whitelist.includes(currentHostname);
       updateWhitelistButton(isWhitelisted);
+      
+      // Update temp whitelist button
+      const tempWhitelist = await browserAPI.storage.local.get({ tempWhitelist: [] });
+      const isTempWhitelisted = tempWhitelist.tempWhitelist && tempWhitelist.tempWhitelist.includes(currentHostname);
+      updateTempWhitelistButton(isTempWhitelisted);
     }
   } catch (error) {
     console.error('Error getting current hostname:', error);
@@ -153,10 +161,23 @@ async function getCurrentHostname() {
 function updateWhitelistButton(isWhitelisted) {
   if (isWhitelisted) {
     elements.whitelistBtn.classList.add('active');
-    elements.whitelistText.textContent = 'Remove from Whitelist';
+    elements.whitelistText.textContent = 'Remove';
   } else {
     elements.whitelistBtn.classList.remove('active');
-    elements.whitelistText.textContent = 'Whitelist Site';
+    elements.whitelistText.textContent = 'Whitelist';
+  }
+}
+
+/**
+ * Update temp whitelist button state
+ */
+function updateTempWhitelistButton(isTempWhitelisted) {
+  if (isTempWhitelisted) {
+    elements.tempWhitelistBtn.classList.add('active');
+    elements.tempWhitelistText.textContent = 'Remove Temp';
+  } else {
+    elements.tempWhitelistBtn.classList.remove('active');
+    elements.tempWhitelistText.textContent = 'Temp Whitelist';
   }
 }
 
@@ -238,6 +259,83 @@ async function toggleWhitelist() {
 }
 
 /**
+ * Toggle temporary whitelist for current site
+ */
+async function toggleTempWhitelist() {
+  if (!currentHostname) return;
+
+  try {
+    const result = await browserAPI.storage.local.get({ tempWhitelist: [] });
+    const tempWhitelist = result.tempWhitelist || [];
+    const isTempWhitelisted = tempWhitelist.includes(currentHostname);
+
+    let newTempWhitelist;
+    if (isTempWhitelisted) {
+      newTempWhitelist = tempWhitelist.filter(site => site !== currentHostname);
+    } else {
+      newTempWhitelist = [...tempWhitelist, currentHostname];
+    }
+    
+    await browserAPI.storage.local.set({ tempWhitelist: newTempWhitelist });
+    updateTempWhitelistButton(!isTempWhitelisted);
+    updateTempWhitelistDisplay(newTempWhitelist);
+    
+  } catch (error) {
+    console.error('Error toggling temporary whitelist:', error);
+  }
+}
+
+/**
+ * Update temporary whitelist display
+ */
+function updateTempWhitelistDisplay(tempWhitelist) {
+  if (!tempWhitelist || tempWhitelist.length === 0) {
+    elements.tempWhitelistContainer.innerHTML = '<p class="empty-state">No temporary whitelist sites</p>';
+    return;
+  }
+
+  elements.tempWhitelistContainer.innerHTML = '';
+  tempWhitelist.forEach(site => {
+    const item = document.createElement('div');
+    item.className = 'whitelist-item';
+    
+    const siteName = document.createElement('span');
+    siteName.className = 'whitelist-site';
+    siteName.textContent = site;
+    
+    const removeBtn = document.createElement('button');
+    removeBtn.className = 'remove-btn';
+    removeBtn.textContent = 'Remove';
+    removeBtn.addEventListener('click', () => removeSiteFromTempWhitelist(site));
+    
+    item.appendChild(siteName);
+    item.appendChild(removeBtn);
+    elements.tempWhitelistContainer.appendChild(item);
+  });
+}
+
+/**
+ * Remove site from temporary whitelist
+ */
+async function removeSiteFromTempWhitelist(site) {
+  try {
+    const result = await browserAPI.storage.local.get({ tempWhitelist: [] });
+    const tempWhitelist = result.tempWhitelist || [];
+    const newTempWhitelist = tempWhitelist.filter(s => s !== site);
+    
+    await browserAPI.storage.local.set({ tempWhitelist: newTempWhitelist });
+    updateTempWhitelistDisplay(newTempWhitelist);
+    
+    // Update button if current site was removed
+    if (site === currentHostname) {
+      updateTempWhitelistButton(false);
+    }
+  } catch (error) {
+    console.error('Error removing site from temporary whitelist:', error);
+  }
+}
+
+/**
  * Toggle between settings and whitelist view
  */
 function toggleView() {
@@ -262,9 +360,12 @@ function toggleView() {
     elements.viewIcon.appendChild(settingsCircle);
     elements.viewToggleBtn.title = 'Back to Settings';
     
-    // Load whitelist
+    // Load whitelists
     browserAPI.storage.sync.get('whitelist').then(settings => {
       updateWhitelistDisplay(settings.whitelist || []);
+    });
+    browserAPI.storage.local.get({ tempWhitelist: [] }).then(result => {
+      updateTempWhitelistDisplay(result.tempWhitelist || []);
     });
   } else {
     // Switch to settings view
@@ -316,6 +417,9 @@ async function init() {
   // Whitelist button
   elements.whitelistBtn.addEventListener('click', toggleWhitelist);
 
+  // Temp whitelist button
+  elements.tempWhitelistBtn.addEventListener('click', toggleTempWhitelist);
+
   // Theme toggle button
   elements.themeToggle.addEventListener('click', toggleTheme);
 
@@ -326,6 +430,9 @@ async function init() {
   browserAPI.storage.onChanged.addListener((changes, areaName) => {
     if (areaName === 'sync' && changes.whitelist && currentView === 'whitelist') {
       updateWhitelistDisplay(changes.whitelist.newValue);
+    }
+    if (areaName === 'local' && changes.tempWhitelist && currentView === 'whitelist') {
+      updateTempWhitelistDisplay(changes.tempWhitelist.newValue || []);
     }
   });
 }

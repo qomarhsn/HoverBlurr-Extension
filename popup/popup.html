@@ -40,8 +40,13 @@
           <span class="site-icon">🌐</span>
           <span id="currentSite" class="site-name">Loading...</span>
         </div>
+      </div>
+      <div class="whitelist-buttons">
         <button id="whitelistBtn" class="btn btn-secondary">
-          <span id="whitelistText">Whitelist Site</span>
+          <span id="whitelistText">Whitelist</span>
+        </button>
+        <button id="tempWhitelistBtn" class="btn btn-secondary">
+          <span id="tempWhitelistText">Temp Whitelist</span>
         </button>
       </div>
     </section>
@@ -73,9 +78,15 @@
     <!-- Whitelist View -->
     <div id="whitelistView" style="display: none;">
       <section class="section">
-        <h2 class="section-title">Whitelisted Sites</h2>
+        <h2 class="section-title">Permanent Whitelist</h2>
         <div id="whitelistContainer" class="whitelist-container">
           <p class="empty-state">No whitelisted sites</p>
+        </div>
+      </section>
+      <section class="section">
+        <h2 class="section-title">Temporary Whitelist <span class="session-badge">(Session)</span></h2>
+        <div id="tempWhitelistContainer" class="whitelist-container">
+          <p class="empty-state">No temporary whitelist sites</p>
         </div>
       </section>
     </div>

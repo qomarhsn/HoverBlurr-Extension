@@ -22,15 +22,19 @@ browserAPI.runtime.onInstalled.addListener((details) => {
       theme: 'auto'
     });
 
+    // Clear temporary whitelist (session-based)
+    browserAPI.storage.local.remove('tempWhitelist');
+
     // Open welcome page (optional)
-    // browserAPI.tabs.create({ url: 'https://github.com/qomarhsn/HoverBlurr-Userscript' });
   } else if (details.reason === 'update') {
     console.log('[HoverBlurr] Extension updated to version', browserAPI.runtime.getManifest().version);
+    // Clear temporary whitelist on update (ensures clean state)
+    browserAPI.storage.local.remove('tempWhitelist');
   }
 });
 
 /**
- * Handle keyboard commands
+ * Listen for keyboard commands
  */
 browserAPI.commands.onCommand.addListener(async (command) => {
   if (command === 'toggle-blur') {
@@ -65,6 +69,39 @@ browserAPI.commands.onCommand.addListener(async (command) => {
       );
     } catch (error) {
       console.error('[HoverBlurr] Error toggling blur:', error);
+    }
+  } else if (command === 'toggle-temp-whitelist') {
+    // Get current tab
+    const [tab] = await browserAPI.tabs.query({ active: true, currentWindow: true });
+    if (!tab || !tab.url) return;
+
+    try {
+      const url = new URL(tab.url);
+      const hostname = url.hostname;
+
+      // Get current temporary whitelist
+      const result = await browserAPI.storage.local.get({ tempWhitelist: [] });
+      const tempWhitelist = result.tempWhitelist || [];
+
+      // Toggle temporary whitelist
+      let newTempWhitelist;
+      if (tempWhitelist.includes(hostname)) {
+        newTempWhitelist = tempWhitelist.filter(site => site !== hostname);
+      } else {
+        newTempWhitelist = [...tempWhitelist, hostname];
+      }
+
+      // Save new temporary whitelist
+      await browserAPI.storage.local.set({ tempWhitelist: newTempWhitelist });
+
+      // Show notification
+      const isTempWhitelisted = newTempWhitelist.includes(hostname);
+      showNotification(
+        isTempWhitelisted ? 'Site Temporarily Whitelisted' : 'Site Removed from Temporary Whitelist',
+        `${hostname} ${isTempWhitelisted ? 'will not be blurred until browser closes' : 'will be blurred'}`
+      );
+    } catch (error) {
+      console.error('[HoverBlurr] Error toggling temporary whitelist:', error);
     }
   }
 });

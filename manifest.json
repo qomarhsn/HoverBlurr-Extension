@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "HoverBlurr",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "Blur images on web pages with customizable settings. Reveal on hover. Perfect for reducing distractions while browsing.",
   "author": "Qomarul Hasan",
   "homepage_url": "https://github.com/qomarhsn/HoverBlurr-Extension",
@@ -44,10 +44,11 @@
   "browser_specific_settings": {
     "gecko": {
       "id": "hoverblurr@qomarhsn.github.io",
-      "strict_min_version": "112.0",
+      "strict_min_version": "142.0",
       "data_collection_permissions": {
         "required": ["none"]
       }
+
     }
   },
 
@@ -57,6 +58,12 @@
         "default": "Alt+B"
       },
       "description": "Toggle blur on/off for current site"
+    },
+    "toggle-temp-whitelist": {
+      "suggested_key": {
+        "default": "Alt+T"
+      },
+      "description": "Toggle temporary whitelist for current site (session only)"
     }
   }
 }

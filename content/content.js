@@ -3,18 +3,34 @@
  * Applies blur effect to images with customizable settings
  */
 
+// Note: browserAPI is defined in storage.js which loads first
+
 (async function () {
   "use strict";
 
   // Settings cache
   let settings = await Storage.get();
+  
+  // Get temp whitelist from local storage
+  let tempWhitelistResult = await browserAPI.storage.local.get({ tempWhitelist: [] });
+  let tempWhitelist = tempWhitelistResult.tempWhitelist || [];
+  
   const hostname = window.location.hostname;
-
-  // Check if current site is whitelisted
-  const isWhitelisted = () => settings.whitelist.includes(hostname);
+  
+  // Check if current site is whitelisted (permanent or temporary)
+  const isWhitelisted = () => settings.whitelist && settings.whitelist.includes(hostname);
+  const isTempWhitelisted = () => tempWhitelist && tempWhitelist.includes(hostname);
 
   // Check if extension is enabled and site is not whitelisted
-  const shouldApplyBlur = () => settings.enabled && !isWhitelisted();
+  const shouldApplyBlur = () => {
+    if (!settings) return false;
+    const enabled = settings.enabled;
+    const whitelisted = isWhitelisted();
+    const tempWhitelisted = isTempWhitelisted();
+    const shouldBlur = enabled && !whitelisted && !tempWhitelisted;
+    
+    return shouldBlur;
+  };
 
   /**
    * Check if image meets size criteria
@@ -158,6 +174,24 @@
       // Reapply blur with new settings immediately
       updateCSSVariables();
 
+      // Remove all blur first
+      removeAllBlur();
+
+      // Reprocess all images with new settings
+      if (shouldApplyBlur()) {
+        processImages();
+      }
+    }
+  });
+
+  /**
+   * Handle temporary whitelist changes (from local storage)
+   */
+  browserAPI.storage.onChanged.addListener((changes, areaName) => {
+    if (areaName === "local" && changes.tempWhitelist) {
+      // Update temporary whitelist cache
+      tempWhitelist = changes.tempWhitelist.newValue || [];
+      
       // Remove all blur first
       removeAllBlur();
 
